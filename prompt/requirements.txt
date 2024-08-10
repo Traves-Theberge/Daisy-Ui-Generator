@@ -1,0 +1,11 @@
+openai==1.40.0
+anthropic==0.31.2
+termcolor
+fastapi
+uvicorn
+jinja2
+python-multipart
+openai
+pydantic
+python-dotenv
+flask
