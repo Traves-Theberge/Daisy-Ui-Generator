@@ -2,7 +2,6 @@ import './globals.css';
 import { ReactNode } from 'react';
 import { ThemeProvider } from 'next-themes';
 import { ChatProvider } from '../context/ChatContext';
-import { FrameworkProvider } from '../context/FrameworkContext';
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
@@ -14,11 +13,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
       </head>
       <body className="min-h-screen bg-base-200">
         <ThemeProvider attribute="data-theme" defaultTheme="light">
-          <FrameworkProvider>
-            <ChatProvider>
-              {children}
-            </ChatProvider>
-          </FrameworkProvider>
+          <ChatProvider>
+            {children}
+          </ChatProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -4,7 +4,6 @@ import { useState, FormEvent } from 'react';
 import ComponentDisplay from '../components/ComponentDisplay';
 import NavBar from '../components/NavBar';
 import { useChat } from '../context/ChatContext';
-import { useFramework } from '../context/FrameworkContext';
 import { ChatContextType } from '../context/ChatContext';
 
 interface Component {
@@ -17,7 +16,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const { chatHistory, addMessage } = useChat() as ChatContextType;
-  const { framework } = useFramework();
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
@@ -27,21 +25,15 @@ export default function Home() {
       const response = await fetch('/api/generate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_input: userInput, framework }),
+        body: JSON.stringify({ user_input: userInput }),
       });
       if (!response.ok) {
         throw new Error('Failed to generate components');
       }
       const data = await response.json();
-      if (Array.isArray(data.components)) {
-        setComponents(data.components.map((comp: any) => ({ html: JSON.stringify(comp) })));
-      } else if (typeof data.components === 'object') {
-        setComponents([{ html: JSON.stringify(data.components) }]);
-      } else {
-        setComponents([{ html: JSON.stringify(data) }]);
-      }
+      setComponents([{ html: data.components.join('\n') }]); // Changed this line
       addMessage(JSON.stringify({ role: 'user', content: userInput }));
-      addMessage(JSON.stringify({ role: 'assistant', content: JSON.stringify(data, null, 2) }));
+      addMessage(JSON.stringify({ role: 'assistant', content: JSON.stringify(data.components) }));
       setUserInput('');
     } catch (error) {
       console.error('Error generating components:', error);

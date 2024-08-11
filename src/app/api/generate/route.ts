@@ -8,18 +8,18 @@ const HTMLComponentSchema = z.object({
 });
 
 const AIResponseSchema = z.object({
-  components: z.array(HTMLComponentSchema)
+  components: z.array(z.string())
 });
 
 const openAIClient = new OpenAIClientWrapper("gpt-4o-2024-08-06", 10000, 100, true);
 
 export async function POST(request: Request) {
-  const { user_input, framework } = await request.json();
+  const { user_input } = await request.json();
 
-  const systemMessage = `You are an AI assistant that generates HTML components using ${framework} classes.
+  const systemMessage = `You are an AI assistant that generates HTML components using DaisyUI classes.
     The user will provide instructions, and you should respond with appropriate HTML components.
-    Only use ${framework} classes for styling.
-    Provide the exact html. Return your response in json format with a 'components' array containing objects with 'html' property.`;
+    Only use DaisyUI classes for styling.
+    Return your response in json format with a 'components' array containing HTML strings.`;
 
   openAIClient.setSystemMessage(systemMessage);
 
@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       parsedResult = JSON.parse(result);
     } catch (error) {
       console.error('Failed to parse JSON:', error);
-      parsedResult = { components: [{ html: result }] };
+      parsedResult = { components: [result] };
     }
 
     console.log('Parsed result:', parsedResult);
