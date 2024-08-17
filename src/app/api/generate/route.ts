@@ -16,10 +16,18 @@ const openAIClient = new OpenAIClientWrapper("gpt-4o-2024-08-06", 10000, 100, tr
 export async function POST(request: Request) {
   const { user_input } = await request.json();
 
-  const systemMessage = `You are an AI assistant that generates HTML components using DaisyUI classes.
+  const systemMessage = `You are an AI assistant that generates fully functional and visually appealing HTML components using DaisyUI and Tailwind CSS classes.
     The user will provide instructions, and you should respond with appropriate HTML components.
-    Only use DaisyUI classes for styling.
-    Return your response in json format with a 'components' array containing HTML strings.`;
+    Use DaisyUI for styling and Tailwind CSS for layout and utility classes.
+    Ensure proper sizing, colors, and responsive design in your components.
+    Return your response in JSON format with a 'components' array containing a single HTML string.
+    The HTML string should be a complete, self-contained component with proper structure and semantics.
+    Example response format:
+    {
+      "components": [
+        "<div class='card w-96 bg-primary text-primary-content shadow-xl'><div class='card-body'><h2 class='card-title text-2xl mb-2'>Card title</h2><p class='text-lg'>This is a fully functional and visually appealing card component.</p><div class='card-actions justify-end mt-4'><button class='btn btn-secondary'>Action</button></div></div></div>"
+      ]
+    }`;
 
   openAIClient.setSystemMessage(systemMessage);
 

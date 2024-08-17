@@ -62,16 +62,20 @@ export class OpenAIClientWrapper {
     this.addMessage('user', userInput);
     const response = await this.getResponse();
     try {
-      // Remove markdown formatting if present
-      const cleanedResponse = response.replace(/```json\n|\n```/g, '');
-      // Try to parse the response as JSON
-      JSON.parse(cleanedResponse);
-      // If parsing succeeds, return the cleaned response
-      return cleanedResponse;
+      // Remove any potential markdown formatting
+      const cleanedResponse = response.replace(/```json\n|\n```/g, '').trim();
+      // Parse the response as JSON
+      const parsedResponse = JSON.parse(cleanedResponse);
+      // Ensure the response has the correct structure
+      if (Array.isArray(parsedResponse.components) && parsedResponse.components.length > 0) {
+        return JSON.stringify(parsedResponse);
+      } else {
+        throw new Error('Invalid response structure');
+      }
     } catch (error) {
       console.error('Invalid JSON response:', response);
-      // If parsing fails, return the original response
-      return response;
+      // If parsing fails, wrap the response in the correct structure
+      return JSON.stringify({ components: [response] });
     }
   }
 
