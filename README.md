@@ -1,4 +1,4 @@
-# UI Component Generator
+# Daisy UI Generator
 
 This project is a Next.js application that generates UI components using DaisyUI classes based on user input. It leverages OpenAI's GPT model to create HTML components dynamically.
 
